@@ -1,5 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout
 from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QPixmap
 
 class MainWindow(QMainWindow):
     """Klasa głównego okna aplikacji"""
@@ -17,6 +18,9 @@ class MainWindow(QMainWindow):
         self.top = 300
         self.width = 640
         self.height = 480
+        self.fileName = ""
+        self.fileImage = QPixmap()
+        self.label = QLabel()
         self.initUi()
 
     def initUi(self):
@@ -30,9 +34,24 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
+        main_layout = QVBoxLayout()
+        file_choose_layout = QHBoxLayout()
+
         choose_file_button = QPushButton("Choose file", self)
-        choose_file_button.move(300, 250)
         choose_file_button.clicked.connect(self.on_click_choose_files)
+
+        self.label.setPixmap(self.fileImage)
+
+        file_choose_layout.addStretch(1)
+        file_choose_layout.addWidget(choose_file_button)
+
+        main_layout.addWidget(self.label)
+        main_layout.addStretch(1)
+        main_layout.addLayout(file_choose_layout)
+
+        widget = QWidget()
+        widget.setLayout(main_layout)
+        self.setCentralWidget(widget)
 
         self.show()
 
@@ -44,12 +63,16 @@ class MainWindow(QMainWindow):
         self.openFileNameDialog()
 
     def openFileNameDialog(self):
+        """Funkcja potencajlnie wybiera plik i zapisuje jego ścieżkę."""
+
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
+        self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
                                                   "All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            print(fileName)
+        if self.fileName != "":
+            print(self.fileName)
+            self.fileImage.load(self.fileName)
+            self.label.setPixmap(self.fileImage)
 
     def openFileNamesDialog(self):
         options = QFileDialog.Options()
