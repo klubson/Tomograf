@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QPushButton, QVBoxLayout, 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPixmap
 
+
 class MainWindow(QMainWindow):
     """Klasa głównego okna aplikacji"""
 
@@ -61,7 +62,7 @@ class MainWindow(QMainWindow):
     def initButtons(self):
         """Nadanie przyciskom funkcji"""
         self.choose_file_button.clicked.connect(self.on_click_choose_files)
-        # self.close_button.clicked.connect()
+        self.close_button.clicked.connect(self.close)
         # self.continue_button.clicked.connect()
 
     @pyqtSlot()
