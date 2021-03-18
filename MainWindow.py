@@ -21,6 +21,10 @@ class MainWindow(QMainWindow):
         self.fileName = ""
         self.fileImage = QPixmap()
         self.label = QLabel()
+        self.choose_file_button = QPushButton("Choose file", self)
+        self.close_button = QPushButton("Close", self)
+        self.continue_button = QPushButton("Continue", self)
+
         self.initUi()
 
     def initUi(self):
@@ -37,13 +41,12 @@ class MainWindow(QMainWindow):
         main_layout = QVBoxLayout()
         file_choose_layout = QHBoxLayout()
 
-        choose_file_button = QPushButton("Choose file", self)
-        choose_file_button.clicked.connect(self.on_click_choose_files)
+        self.initButtons()
 
-        self.label.setPixmap(self.fileImage)
-
+        file_choose_layout.addWidget(self.close_button)
         file_choose_layout.addStretch(1)
-        file_choose_layout.addWidget(choose_file_button)
+        file_choose_layout.addWidget(self.choose_file_button)
+        file_choose_layout.addWidget(self.continue_button)
 
         main_layout.addWidget(self.label)
         main_layout.addStretch(1)
@@ -54,6 +57,12 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
         self.show()
+
+    def initButtons(self):
+        """Nadanie przyciskom funkcji"""
+        self.choose_file_button.clicked.connect(self.on_click_choose_files)
+        # self.close_button.clicked.connect()
+        # self.continue_button.clicked.connect()
 
     @pyqtSlot()
     def on_click_choose_files(self):
