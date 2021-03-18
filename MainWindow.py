@@ -25,6 +25,8 @@ class MainWindow(QMainWindow):
         self.choose_file_button = QPushButton("Choose file", self)
         self.close_button = QPushButton("Close", self)
         self.continue_button = QPushButton("Continue", self)
+        self.file_choose_layout = QHBoxLayout()
+        self.main_layout = QVBoxLayout()
 
         self.initUi()
 
@@ -32,30 +34,14 @@ class MainWindow(QMainWindow):
         """Inicjalizacja Startowego UI
 
         Ustawia wymiary okna, tytuł i połorzenie.
-        Następnie pokazuje okno
-
-        Obecnie tworzy jeden przycisk odpowiadający za wybranie pliku."""
+        Inicjalizuje przyciski i Layout.
+        Następnie pokazuje okno"""
 
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        main_layout = QVBoxLayout()
-        file_choose_layout = QHBoxLayout()
-
         self.initButtons()
-
-        file_choose_layout.addWidget(self.close_button)
-        file_choose_layout.addStretch(1)
-        file_choose_layout.addWidget(self.choose_file_button)
-        file_choose_layout.addWidget(self.continue_button)
-
-        main_layout.addWidget(self.label)
-        main_layout.addStretch(1)
-        main_layout.addLayout(file_choose_layout)
-
-        widget = QWidget()
-        widget.setLayout(main_layout)
-        self.setCentralWidget(widget)
+        self.initLayout()
 
         self.show()
 
@@ -64,6 +50,21 @@ class MainWindow(QMainWindow):
         self.choose_file_button.clicked.connect(self.on_click_choose_files)
         self.close_button.clicked.connect(self.close)
         # self.continue_button.clicked.connect()
+
+    def initLayout(self):
+        """Ustawienie layout"""
+        self.file_choose_layout.addWidget(self.close_button)
+        self.file_choose_layout.addStretch(1)
+        self.file_choose_layout.addWidget(self.choose_file_button)
+        self.file_choose_layout.addWidget(self.continue_button)
+
+        self.main_layout.addWidget(self.label)
+        self.main_layout.addStretch(1)
+        self.main_layout.addLayout(self.file_choose_layout)
+
+        widget = QWidget()
+        widget.setLayout(self.main_layout)
+        self.setCentralWidget(widget)
 
     @pyqtSlot()
     def on_click_choose_files(self):
