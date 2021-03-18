@@ -1,5 +1,6 @@
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
 
 
@@ -15,12 +16,13 @@ class MainWindow(QMainWindow):
 
         super(MainWindow, self).__init__()
         self.title = "Tomograf"
-        self.left = 650
-        self.top = 300
+        self.left = 450
+        self.top = 200
         self.width = 640
         self.height = 480
         self.fileName = ""
         self.fileImage = QPixmap()
+        self.fileImageScaled = QPixmap()
         self.label = QLabel()
         self.choose_file_button = QPushButton("Choose file", self)
         self.close_button = QPushButton("Close", self)
@@ -39,6 +41,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
+        self.label.setMinimumSize(1, 1)
 
         self.initButtons()
         self.initLayout()
@@ -83,7 +86,9 @@ class MainWindow(QMainWindow):
         if self.fileName != "":
             print(self.fileName)
             self.fileImage.load(self.fileName)
-            self.label.setPixmap(self.fileImage)
+            self.fileImageScaled = self.fileImage.scaled(
+                self.frameGeometry().width(), self.frameGeometry().height(), Qt.KeepAspectRatio).copy()
+            self.label.setPixmap(self.fileImageScaled)
 
     def openFileNamesDialog(self):
         options = QFileDialog.Options()
@@ -100,3 +105,8 @@ class MainWindow(QMainWindow):
                                                   "All Files (*);;Text Files (*.txt)", options=options)
         if fileName:
             print(fileName)
+
+    def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
+        self.fileImageScaled = self.fileImage.scaled(
+            self.frameGeometry().width(), self.frameGeometry().height(), Qt.KeepAspectRatio).copy()
+        self.label.setPixmap(self.fileImageScaled)
