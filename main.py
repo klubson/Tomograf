@@ -1,11 +1,15 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
-app = QApplication(sys.argv)
+from MainWindow import *
 
-window = QMainWindow()
-window.show() # IMPORTANT!!!!! Windows are hidden by default.
+def main():
+    app = QApplication(sys.argv)
 
+    window = MainWindow()
 
-# Start the event loop.
-app.exec_()
+    # Start the event loop.
+    app.exec_()
+
+if __name__ == "__main__":
+    main()
