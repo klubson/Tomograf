@@ -1,28 +1,107 @@
 import numpy as np
 import math
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QImage
 
 startPoint = (0, 0)
 endPoint = (5, 3)
 
+
+class Algorithm:
+    alfa = 0
+    n = 0
+    l = 0
+    r = 0
+    S = (0, 0)
+    E = (0, 0)
+    D = []
+    image = QImage
+    iterations = np.arange
+
+    def __init__(self, picture, deltaAlfa, detectors, range):
+        """Inicjalizacja klasy wykonującej obliczenia"""
+
+        self.alfa = (360 - deltaAlfa) / 2 * -2 * math.pi
+        """krok dla układu emiter/detektor - od użytkownika"""
+
+        self.n = detectors
+        """liczba detektorów - od użytkownika"""
+
+        self.l = range / 360 * 2 * math.pi
+        """Rozwartość/rozpiętość układu emiter/detektor - od użytkownika"""
+
+        self.image = picture.toImage()
+        """Obraz pobrany z komputera"""
+
+        self.r = image.width()/2
+        """Promień okręgu wpisanego w obrazek - z wczytanego zdjęcia"""
+
+        self.S = (0, 0)
+        """Środek obrazka - z wczytanego zdjęcia"""
+
+        self.E = (r * math.cos(0), r * math.sin(0))
+        """Emiter i jego właściwości"""
+
+        self.D = []
+        """Kontener zawierający współrzędne detektorów"""
+
+        self.iterations = np.arange(0, 180, a)
+        """Liczba kroków podczas tworzenia sinogramu"""
+
+    def countDetectorsCoordinates(self):
+        """Metoda inicjalizująca współrzędne detektorów"""
+        for d in range(n):
+            # a = (r * math.cos(alfa + math.pi - l / 2 + d * l / (n - 1)),
+            #      r * math.sin(alfa + math.pi - l / 2 + d * l / (n - 1)))
+            a = (0, 0)
+            D.append(a)
+
+    def createSinogram(self):
+        """Metoda tworząca sinogram"""
+        for angle in self.iterations:
+            for detector in D:
+                D[detector][0] = r * math.cos(angle + math.pi - l / 2 + d * l / (n - 1))
+                D[detector][1] = r * math.sin(angle + math.pi - l / 2 + d * l / (n - 1))
+
+                deltaX = self.E[0] - D[detector][0]
+                deltaY = self.E[1] - D[detector][1]
+
+                if deltaX < deltaY:
+                    """Zmiana Driving Axis"""
+                    tmp = self.E[0]
+                    self.E[0] = self.E[1]
+                    self.E[1] = tmp
+
+                    tmp = D[detector][0]
+                    D[detector][0] = D[detector][1]
+                    D[detector][1] = tmp
+                j = self.E[1]
+                slope = deltaY - deltaX
+                if deltaX >= 0:
+                    if deltaY >= 0:
+                        # if deltaX >= deltaY:
+                        #     print("good")
+                        # else:
+                        print("bez zmian")
+                    else:
+                        print("zmiana znaku deltaX przy odejmowaniu od epsilon")
+                else:
+                    if deltaY >= 0:
+                        print("")
+                    else:
+                        print("zmiana znaku deltaX oraz deltaY przy działaniu z epsilon")
+
+
+
+
+
+
+
+
+
+
 """Całkowitoliczbowy algorytm Bresenhama"""
 
-"""krok dla układu emiter/detektor - od użytkownika"""
-alfa = 30 / 360
-"""liczba detektorów - od użytkownika"""
-n = 5
-"""Rozwartość/rozpiętość układu emiter/detektor - od użytkownika"""
-l = 90 / 360
-"""Promień okręgu wpisanego w obrazek - z wczytanego zdjęcia"""
-r = 10
-"""Środek obrazka - z wczytanego zdjęcia"""
-S = (0, 0)
-"""Emiter i jego właściwości"""
-E = (r * math.cos(alfa), r * math.sin(alfa))
-"""Kontener zawierający parametry detektorów"""
-D = []
-for d in range(n):
-    a = (r * math.cos(alfa + math.pi - l / 2 + d * l / (n - 1)), r * math.sin(alfa + math.pi - l / 2 + d * l / (n - 1)))
-    D.append(a)
 print(D)
 deltaX = endPoint[0] - startPoint[0]
 deltaY = endPoint[1] - startPoint[1]

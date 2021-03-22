@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         """Inicjalizacja
 
-        Ustala domyślne wymiary (640 x 480), tytuł i połorzenie okna
+        Ustala domyślne wymiary (640 x 480), tytuł i położenie okna
         oraz inicjuje startowe UI
         """
 
@@ -35,7 +35,7 @@ class MainWindow(QMainWindow):
     def initUi(self):
         """Inicjalizacja Startowego UI
 
-        Ustawia wymiary okna, tytuł i połorzenie.
+        Ustawia wymiary okna, tytuł i położenie.
         Inicjalizuje przyciski i Layout.
         Następnie pokazuje okno"""
 
