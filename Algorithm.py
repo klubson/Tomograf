@@ -13,7 +13,7 @@ class Algorithm:
     l = 0
     r = 0
     S = (0, 0)
-    E = (0, 0)
+    E = [0, 0]
     D = []
     image = QImage
     iterations = np.arange
@@ -33,39 +33,38 @@ class Algorithm:
         self.image = picture.toImage()
         """Obraz pobrany z komputera"""
 
-        self.r = image.width()/2
+        self.r = self.image.width()/2
         """Promień okręgu wpisanego w obrazek - z wczytanego zdjęcia"""
 
         self.S = (0, 0)
         """Środek obrazka - z wczytanego zdjęcia"""
 
-        self.E = (r * math.cos(0), r * math.sin(0))
+        self.E = [self.r * math.cos(0), self.r * math.sin(0)]
         """Emiter i jego właściwości"""
 
         self.D = []
         """Kontener zawierający współrzędne detektorów"""
 
-        self.iterations = np.arange(0, 180, a)
+        self.iterations = np.arange(0, 180, self.alfa)
         """Liczba kroków podczas tworzenia sinogramu"""
 
     def countDetectorsCoordinates(self):
         """Metoda inicjalizująca współrzędne detektorów"""
-        for d in range(n):
+        for d in range(self.n):
             # a = (r * math.cos(alfa + math.pi - l / 2 + d * l / (n - 1)),
             #      r * math.sin(alfa + math.pi - l / 2 + d * l / (n - 1)))
             a = (0, 0)
-            D.append(a)
+            self.D.append(a)
 
     def createSinogram(self):
         """Metoda tworząca sinogram"""
         for angle in self.iterations:
-            for detector in D:
-                D[detector][0] = r * math.cos(angle + math.pi - l / 2 + d * l / (n - 1))
-                D[detector][1] = r * math.sin(angle + math.pi - l / 2 + d * l / (n - 1))
-                illuminatedPoints = []
+            for detector in self.D:
+                self.D[detector][0] = self.r * math.cos(angle + math.pi - self.l / 2 + self.d * self.l / (self.n - 1))
+                self.D[detector][1] = self.r * math.sin(angle + math.pi - self.l / 2 + self.d * self.l / (self.n - 1))
 
-                deltaX = self.E[0] - D[detector][0]
-                deltaY = self.E[1] - D[detector][1]
+                deltaX = self.E[0] - self.D[detector][0]
+                deltaY = self.E[1] - self.D[detector][1]
 
                 if deltaX < deltaY:
                     """Zmiana Driving Axis"""
@@ -73,9 +72,9 @@ class Algorithm:
                     self.E[0] = self.E[1]
                     self.E[1] = tmp
 
-                    tmp = D[detector][0]
-                    D[detector][0] = D[detector][1]
-                    D[detector][1] = tmp
+                    tmp = self.D[detector][0]
+                    self.D[detector][0] = self.D[detector][1]
+                    self.D[detector][1] = tmp
                 j = self.E[1]
                 slope = deltaY - deltaX
                 if deltaX >= 0:
@@ -91,21 +90,6 @@ class Algorithm:
                         print("")
                     else:
                         print("zmiana znaku deltaX oraz deltaY przy działaniu z epsilon")
-
-                for i in range(self.E[0], D[detector][0] - 1):
-                    # illuminate(i,j)
-                    point = (i, j)
-                    illuminatedPoints.append(point)
-                    #print(i, j, "    ", slope)
-                    if slope >= 0:
-                        j += 1
-                        slope -= deltaX
-                        #print(i, j, "    ", slope)
-                    slope += deltaY
-                    i += 1
-                colors = []
-                for m in range(length(illuminatedPoints)):
-
 
 
 
@@ -124,4 +108,12 @@ deltaY = endPoint[1] - startPoint[1]
 j = startPoint[1]
 slope = deltaY - deltaX
 
-
+for i in range(startPoint[0], endPoint[0] - 1):
+    # illuminate(i,j)
+    print(i, j, "    ", slope)
+    if slope >= 0:
+        j += 1
+        slope -= deltaX
+        print(i, j, "    ", slope)
+    slope += deltaY
+    i += 1
