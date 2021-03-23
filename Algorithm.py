@@ -3,9 +3,6 @@ import math
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QImage
 
-startPoint = (0, 0)
-endPoint = (5, 3)
-
 
 class Algorithm:
     alfa = 0
@@ -33,7 +30,7 @@ class Algorithm:
         self.image = picture.toImage()
         """Obraz pobrany z komputera"""
 
-        self.r = self.image.width()/2
+        self.r = self.image.width() / 2
         """Promień okręgu wpisanego w obrazek - z wczytanego zdjęcia"""
 
         self.S = (0, 0)
@@ -48,13 +45,14 @@ class Algorithm:
         self.iterations = np.arange(0, 180, self.alfa)
         """Liczba kroków podczas tworzenia sinogramu"""
 
-    def countDetectorsCoordinates(self):
+        self.createDetectorsCoordinates()
+        print(self.D)
+
+    def createDetectorsCoordinates(self):
         """Metoda inicjalizująca współrzędne detektorów"""
         for d in range(self.n):
-            # a = (r * math.cos(alfa + math.pi - l / 2 + d * l / (n - 1)),
-            #      r * math.sin(alfa + math.pi - l / 2 + d * l / (n - 1)))
-            a = (0, 0)
-            self.D.append(a)
+            self.D.append((0, 0))
+        list(enumerate(D))
 
     def createSinogram(self):
         """Metoda tworząca sinogram"""
@@ -90,30 +88,15 @@ class Algorithm:
                         print("")
                     else:
                         print("zmiana znaku deltaX oraz deltaY przy działaniu z epsilon")
-
-
-
-
-
-
-
-
-
+                for i in range(startPoint[0], endPoint[0] - 1):
+                    # illuminate(i,j)
+                    print(i, j, "    ", slope)
+                    if slope >= 0:
+                        j += 1
+                        slope -= deltaX
+                        print(i, j, "    ", slope)
+                    slope += deltaY
+                    i += 1
 
 """Całkowitoliczbowy algorytm Bresenhama"""
 
-print(D)
-deltaX = endPoint[0] - startPoint[0]
-deltaY = endPoint[1] - startPoint[1]
-j = startPoint[1]
-slope = deltaY - deltaX
-
-for i in range(startPoint[0], endPoint[0] - 1):
-    # illuminate(i,j)
-    print(i, j, "    ", slope)
-    if slope >= 0:
-        j += 1
-        slope -= deltaX
-        print(i, j, "    ", slope)
-    slope += deltaY
-    i += 1
