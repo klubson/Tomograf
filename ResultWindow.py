@@ -3,7 +3,18 @@ from PyQt5.QtCore import Qt
 
 
 class ResultWindow(QDialog):
-    """Okno do wyswietlania wyników"""
+    """Okno do wyswietlania wyników
+
+    TODO
+    +---------------+--------------------+
+    |               |                    |
+    |               |                    |
+    |     sinogram  |   wyjściowy        |
+    |               |                    |
+    |_______________|____________________|
+    |                przyciski           |
+    +------------------------------------+
+    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
