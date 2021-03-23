@@ -4,6 +4,9 @@ from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
 
 
+from ResultWindow import ResultWindow
+
+
 class MainWindow(QMainWindow):
     """Klasa głównego okna aplikacji"""
 
@@ -52,7 +55,7 @@ class MainWindow(QMainWindow):
         """Nadanie przyciskom funkcji"""
         self.choose_file_button.clicked.connect(self.on_click_choose_files)
         self.close_button.clicked.connect(self.close)
-        # self.continue_button.clicked.connect()
+        self.continue_button.clicked.connect(self.on_click_show_result)
 
     def initLayout(self):
         """Ustawienie layout"""
@@ -75,6 +78,11 @@ class MainWindow(QMainWindow):
         Otwiera okno wyszukiwania pojedyńczego pliku."""
 
         self.openFileNameDialog()
+
+    @pyqtSlot()
+    def on_click_show_result(self):
+        res = ResultWindow()
+        res.exec_()
 
     def openFileNameDialog(self):
         """Funkcja potencajlnie wybiera plik i zapisuje jego ścieżkę."""
