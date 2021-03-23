@@ -45,7 +45,7 @@ class Algorithm:
         self.D = []
         """Kontener zawierający współrzędne detektorów"""
 
-        self.iterations = np.arange(0, 180, self.a)
+        self.iterations = np.arange(0, 180, self.alfa)
         """Liczba kroków podczas tworzenia sinogramu"""
 
     def countDetectorsCoordinates(self):
