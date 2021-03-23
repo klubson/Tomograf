@@ -13,7 +13,7 @@ class Algorithm:
     l = 0
     r = 0
     S = (0, 0)
-    E = (0, 0)
+    E = [0, 0]
     D = []
     image = QImage
     iterations = np.arange
@@ -39,7 +39,7 @@ class Algorithm:
         self.S = (0, 0)
         """Środek obrazka - z wczytanego zdjęcia"""
 
-        self.E = (self.r * math.cos(0), self.r * math.sin(0))
+        self.E = [self.r * math.cos(0), self.r * math.sin(0)]
         """Emiter i jego właściwości"""
 
         self.D = []
