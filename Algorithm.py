@@ -62,6 +62,7 @@ class Algorithm:
             for detector in D:
                 D[detector][0] = r * math.cos(angle + math.pi - l / 2 + d * l / (n - 1))
                 D[detector][1] = r * math.sin(angle + math.pi - l / 2 + d * l / (n - 1))
+                illuminatedPoints = []
 
                 deltaX = self.E[0] - D[detector][0]
                 deltaY = self.E[1] - D[detector][1]
@@ -91,6 +92,21 @@ class Algorithm:
                     else:
                         print("zmiana znaku deltaX oraz deltaY przy działaniu z epsilon")
 
+                for i in range(self.E[0], D[detector][0] - 1):
+                    # illuminate(i,j)
+                    point = (i, j)
+                    illuminatedPoints.append(point)
+                    #print(i, j, "    ", slope)
+                    if slope >= 0:
+                        j += 1
+                        slope -= deltaX
+                        #print(i, j, "    ", slope)
+                    slope += deltaY
+                    i += 1
+                colors = []
+                for m in range(length(illuminatedPoints)):
+
+
 
 
 
@@ -108,12 +124,4 @@ deltaY = endPoint[1] - startPoint[1]
 j = startPoint[1]
 slope = deltaY - deltaX
 
-for i in range(startPoint[0], endPoint[0] - 1):
-    # illuminate(i,j)
-    print(i, j, "    ", slope)
-    if slope >= 0:
-        j += 1
-        slope -= deltaX
-        print(i, j, "    ", slope)
-    slope += deltaY
-    i += 1
+
