@@ -1,8 +1,9 @@
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QSlider, QFileDialog, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
 
+from SliderBox import SliderBox
 
 class MainWindow(QMainWindow):
     """Klasa głównego okna aplikacji"""
@@ -29,6 +30,9 @@ class MainWindow(QMainWindow):
         self.continue_button = QPushButton("Continue", self)
         self.file_choose_layout = QHBoxLayout()
         self.main_layout = QVBoxLayout()
+        self.angle_slider = SliderBox("Angle:", 45, 270, 45)
+        self.sensor_slider = SliderBox("Sensors:", 90, 720, 90)
+        self.scan_count_slider = SliderBox("Scans:", 90, 720, 90)
 
         self.initUi()
 
@@ -63,6 +67,9 @@ class MainWindow(QMainWindow):
 
         self.main_layout.addWidget(self.label)
         self.main_layout.addStretch(1)
+        self.main_layout.addLayout(self.angle_slider)
+        self.main_layout.addLayout(self.sensor_slider)
+        self.main_layout.addLayout(self.scan_count_slider)
         self.main_layout.addLayout(self.file_choose_layout)
 
         widget = QWidget()
