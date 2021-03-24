@@ -32,3 +32,6 @@ class SliderBox(QHBoxLayout):
 
     def setVal(self):
         self.value.setText(str(self.slider.value()))
+
+    def getVal(self):
+        return self.value

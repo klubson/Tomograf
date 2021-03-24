@@ -65,8 +65,7 @@ class MainWindow(QMainWindow):
         self.file_choose_layout.addWidget(self.choose_file_button)
         self.file_choose_layout.addWidget(self.continue_button)
 
-        self.main_layout.addWidget(self.label)
-        self.main_layout.addStretch(1)
+        self.main_layout.addWidget(self.label, 1)
         self.main_layout.addLayout(self.angle_slider)
         self.main_layout.addLayout(self.sensor_slider)
         self.main_layout.addLayout(self.scan_count_slider)
@@ -94,7 +93,7 @@ class MainWindow(QMainWindow):
             print(self.fileName)
             self.fileImage.load(self.fileName)
             self.fileImageScaled = self.fileImage.scaled(
-                self.frameGeometry().width(), self.frameGeometry().height(), Qt.KeepAspectRatio).copy()
+                self.label.frameGeometry().width(), self.label.frameGeometry().height(), Qt.KeepAspectRatio).copy()
             self.label.setPixmap(self.fileImageScaled)
 
     def openFileNamesDialog(self):
@@ -115,5 +114,5 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
         self.fileImageScaled = self.fileImage.scaled(
-            self.frameGeometry().width(), self.frameGeometry().height(), Qt.KeepAspectRatio).copy()
+            self.label.frameGeometry().width(), self.label.frameGeometry().height(), Qt.KeepAspectRatio).copy()
         self.label.setPixmap(self.fileImageScaled)
