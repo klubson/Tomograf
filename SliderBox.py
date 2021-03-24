@@ -20,9 +20,9 @@ class SliderBox(QHBoxLayout):
         self.slider.setMinimumWidth(200)
 
         self.value = QLabel()
-        self.setVal()
+        self.__setVal()
 
-        self.slider.valueChanged.connect(self.setVal)
+        self.slider.valueChanged.connect(self.__setVal)
 
         self.addWidget(self.text)
         self.addWidget(self.value)
@@ -30,7 +30,7 @@ class SliderBox(QHBoxLayout):
         self.addWidget(self.slider)
         self.addStretch(1)
 
-    def setVal(self):
+    def __setVal(self):  # "__" przed funkcją w klasie robi ją prywatną w pythonie
         self.value.setText(str(self.slider.value()))
 
     def getVal(self):
