@@ -1,4 +1,5 @@
 from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QSlider, QFileDialog, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
@@ -56,7 +57,7 @@ class MainWindow(QMainWindow):
         """Nadanie przyciskom funkcji"""
         self.choose_file_button.clicked.connect(self.on_click_choose_files)
         self.close_button.clicked.connect(self.close)
-        # self.continue_button.clicked.connect()
+        self.continue_button.clicked.connect(self.on_click_continue)
 
     def initLayout(self):
         """Ustawienie layout"""
@@ -116,3 +117,12 @@ class MainWindow(QMainWindow):
         self.fileImageScaled = self.fileImage.scaled(
             self.label.frameGeometry().width(), self.label.frameGeometry().height(), Qt.KeepAspectRatio).copy()
         self.label.setPixmap(self.fileImageScaled)
+
+    def on_click_continue(self):
+        if self.fileName:
+            print('good')
+            algorithm = Algorithm(self.fileImageScaled, self.angle_slider.getVal, self.sensor_slider.getVal, self.scan_count_slider.getVal)
+        else:
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage('No file chosen!')
+            error_dialog.exec_()
