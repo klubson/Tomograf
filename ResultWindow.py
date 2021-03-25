@@ -23,6 +23,11 @@ class ResultWindow(QDialog):
         self.setWindowTitle("Wyniki")
         self.setWindowModality(Qt.ApplicationModal)
 
+        self.width = 640
+        self.height = 480
+
+        self.resize(self.width, self.height)
+
         self.close_button = QPushButton("Close", self)
         self.save_button = QPushButton("Save", self)
 
@@ -56,12 +61,17 @@ class ResultWindow(QDialog):
         self.button_layout.addWidget(self.save_button)
 
         self.save_button.clicked.connect(self.on_click_save)
+        self.close_button.clicked.connect(self.on_click_close)
 
         self.setLayout(self.main_layout)
 
     @pyqtSlot()
     def on_click_save(self):
         self.saveFileDialog()
+
+    @pyqtSlot()
+    def on_click_close(self):
+        self.close()
 
     def saveFileDialog(self):
         options = QFileDialog.Options()
