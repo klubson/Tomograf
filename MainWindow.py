@@ -1,6 +1,6 @@
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QSlider, QFileDialog, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QSlider, QFileDialog, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout, QMessageBox
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
 
@@ -88,22 +88,14 @@ class MainWindow(QMainWindow):
 
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
-                                                  "All Files (*);;Python Files (*.py)", options=options)
+        self.fileName, _ = QFileDialog.getOpenFileName(self, "Select a file", "",
+                                                  "All Files (*);;IMG Files (*.jpg)", options=options)
         if self.fileName != "":
             print(self.fileName)
             self.fileImage.load(self.fileName)
             self.fileImageScaled = self.fileImage.scaled(
                 self.label.frameGeometry().width(), self.label.frameGeometry().height(), Qt.KeepAspectRatio).copy()
             self.label.setPixmap(self.fileImageScaled)
-
-    def openFileNamesDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        files, _ = QFileDialog.getOpenFileNames(self, "QFileDialog.getOpenFileNames()", "",
-                                                "All Files (*);;Python Files (*.py)", options=options)
-        if files:
-            print(files)
 
     def saveFileDialog(self):
         options = QFileDialog.Options()
@@ -121,8 +113,10 @@ class MainWindow(QMainWindow):
     def on_click_continue(self):
         if self.fileName:
             print('good')
-            algorithm = Algorithm(self.fileImageScaled, self.angle_slider.getVal, self.sensor_slider.getVal, self.scan_count_slider.getVal)
+            algorithm = Algorithm(self.fileImage, self.angle_slider.getVal, self.sensor_slider.getVal, self.scan_count_slider.getVal)
         else:
-            error_dialog = QtWidgets.QErrorMessage()
-            error_dialog.showMessage('No file chosen!')
+            error_dialog = QtWidgets.QMessageBox()
+            error_dialog.setIcon(QMessageBox.Critical)
+            error_dialog.setWindowTitle('Error')
+            error_dialog.setText('No file chosen!')
             error_dialog.exec_()

@@ -52,15 +52,15 @@ class Algorithm:
         """Metoda inicjalizująca współrzędne detektorów"""
         for d in range(self.n):
             self.D.append((0, 0))
-        list(enumerate(D))
 
     def createSinogram(self):
         """Metoda tworząca sinogram"""
         for angle in self.iterations:
+            counter = 0
             for detector in self.D:
-                self.D[detector][0] = self.r * math.cos(angle + math.pi - self.l / 2 + self.d * self.l / (self.n - 1))
-                self.D[detector][1] = self.r * math.sin(angle + math.pi - self.l / 2 + self.d * self.l / (self.n - 1))
-
+                self.D[detector][0] = self.r * math.cos(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
+                self.D[detector][1] = self.r * math.sin(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
+                counter += 1
                 deltaX = self.E[0] - self.D[detector][0]
                 deltaY = self.E[1] - self.D[detector][1]
 
