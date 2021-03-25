@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QDialog, QPushButton, QSlider, QLabel, QHBoxLayout, QVBoxLayout, QWidget
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog, QPushButton, QSlider, QFileDialog, QLabel, QHBoxLayout, QVBoxLayout, QWidget
+from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QPixmap
 
 
@@ -37,6 +37,8 @@ class ResultWindow(QDialog):
         self.picture_layout = QHBoxLayout()
         self.button_layout = QHBoxLayout()
 
+        self.fileName = ""
+
         self.setupUI()
 
     def setupUI(self):
@@ -53,4 +55,18 @@ class ResultWindow(QDialog):
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.save_button)
 
+        self.save_button.clicked.connect(self.on_click_save)
+
         self.setLayout(self.main_layout)
+
+    @pyqtSlot()
+    def on_click_save(self):
+        self.saveFileDialog()
+
+    def saveFileDialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(self, "QFileDialog.getSaveFileName()", "",
+                                                  "All Files (*);;Text Files (*.txt)", options=options)
+        if fileName:
+            print(fileName)

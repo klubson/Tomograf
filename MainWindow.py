@@ -98,21 +98,6 @@ class MainWindow(QMainWindow):
                 self.frameGeometry().width(), self.frameGeometry().height(), Qt.KeepAspectRatio).copy()
             self.label.setPixmap(self.fileImageScaled)
 
-    def openFileNamesDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        files, _ = QFileDialog.getOpenFileNames(self, "QFileDialog.getOpenFileNames()", "",
-                                                "All Files (*);;Python Files (*.py)", options=options)
-        if files:
-            print(files)
-
-    def saveFileDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(self, "QFileDialog.getSaveFileName()", "",
-                                                  "All Files (*);;Text Files (*.txt)", options=options)
-        if fileName:
-            print(fileName)
 
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
         self.fileImageScaled = self.fileImage.scaled(
