@@ -5,6 +5,7 @@ from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
 
 from SliderBox import SliderBox
+from Algorithm import Algorithm
 
 class MainWindow(QMainWindow):
     """Klasa głównego okna aplikacji"""
@@ -31,9 +32,9 @@ class MainWindow(QMainWindow):
         self.continue_button = QPushButton("Continue", self)
         self.file_choose_layout = QHBoxLayout()
         self.main_layout = QVBoxLayout()
-        self.angle_slider = SliderBox("Angle:", 45, 270, 45)
+        self.angle_slider = SliderBox("Angle:", 0, 90, 1)
         self.sensor_slider = SliderBox("Sensors:", 90, 720, 90)
-        self.scan_count_slider = SliderBox("Scans:", 90, 720, 90)
+        self.scan_count_slider = SliderBox("Range:", 1, 90, 1)
 
         self.initUi()
 
@@ -113,7 +114,7 @@ class MainWindow(QMainWindow):
     def on_click_continue(self):
         if self.fileName:
             print('good')
-            algorithm = Algorithm(self.fileImage, self.angle_slider.getVal, self.sensor_slider.getVal, self.scan_count_slider.getVal)
+            algorithm = Algorithm(self.fileImage, self.angle_slider.getVal(), self.sensor_slider.getVal(), self.scan_count_slider.getVal())
         else:
             error_dialog = QtWidgets.QMessageBox()
             error_dialog.setIcon(QMessageBox.Critical)
