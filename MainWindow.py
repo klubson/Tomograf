@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.file_choose_layout = QHBoxLayout()
         self.main_layout = QVBoxLayout()
         self.angle_slider = SliderBox("Angle:", 0, 90, 1)
-        self.sensor_slider = SliderBox("Sensors:", 90, 720, 90)
+        self.sensor_slider = SliderBox("Sensors:", 10, 100, 5)
         self.scan_count_slider = SliderBox("Range:", 1, 90, 1)
 
         self.initUi()

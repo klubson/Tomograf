@@ -40,4 +40,4 @@ class SliderBox(QHBoxLayout):
         self.value.setText(str(self.slider.value()))
 
     def getVal(self):
-        return self.value
+        return self.slider.value()

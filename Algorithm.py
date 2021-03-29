@@ -23,7 +23,7 @@ class Algorithm:
         self.n = detectors
         """liczba detektorów - od użytkownika"""
 
-        self.l = math.radians(range/(self.n - 1))
+        self.l = math.radians(range)
         """Rozwartość/rozpiętość układu emiter/detektor - od użytkownika"""
 
         self.image = picture.toImage()
@@ -41,11 +41,13 @@ class Algorithm:
         self.D = []
         """Kontener zawierający współrzędne detektorów"""
 
-        self.iterations = np.arange(0, 180, self.alfa)
+        self.iterations = np.arange(0, 181, deltaAlfa)
         """Liczba kroków podczas tworzenia sinogramu"""
 
         self.createDetectorsCoordinates()
         print(self.D)
+        sinogram = self.createSinogram()
+        #print(self.sinogram)
 
     def createDetectorsCoordinates(self):
         """Metoda inicjalizująca współrzędne detektorów"""
@@ -54,9 +56,9 @@ class Algorithm:
 
     def updateDetectorsCoordinates(self, angle):
         """Metoda aktualizująca współrzędne detektorów podczas iteracji"""
-        for detector in self.D:
-            self.D[detector][0] = self.r * math.cos(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
-            self.D[detector][1] = self.r * math.sin(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
+        for counter in range(len(self.D)):
+            self.D[counter][0] = self.r * math.cos(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
+            self.D[counter][1] = self.r * math.sin(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
 
     def get_points(startPoint, endPoint):
         """Algorytm Bresenhama"""
@@ -97,14 +99,15 @@ class Algorithm:
         return points
     def createSinogram(self):
         """Metoda tworząca sinogram"""
-        sinogram = [ [0]*len(self.D) for i in range(len(self.iterations))]
+        sin = [ [0]*len(self.D) for i in range(len(self.iterations))]
         for angleIndex, angle in enumerate(self.iterations):
-            self.updateDetectorsCoordinates(angle)
+            self.updateDetectorsCoordinates(math.radians(angle))
+            print(self.D)
             for detectorIndex, detector in enumerate(self.D):
                 pts = self.get_points(self.E, detector)
                 colorValue = 0.0
                 for point in pts:
                     colorValue += qGray(self.image.pixel(point[0], point[1]))
-                sinogram[angleIndex][detectorIndex] = colorValue
-
-        return sinogram
+                sin[angleIndex][detectorIndex] = colorValue
+        print(sin)
+        return sin
