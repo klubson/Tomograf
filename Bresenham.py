@@ -1,6 +1,6 @@
 import math
 
-def get_points(start, end):
+def get_points(self, start, end):
     x1, y1 = start
     x2, y2 = end
     dx = x2 - x1

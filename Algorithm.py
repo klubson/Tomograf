@@ -1,7 +1,10 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 import math
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QImage
+from PyQt5.QtGui import *
 
 class Algorithm:
     alfa = 0
@@ -13,11 +16,12 @@ class Algorithm:
     D = [] #list of detectors
     image = QImage
     iterations = np.arange
+    sinogram = []
 
     def __init__(self, picture, deltaAlfa, detectors, range):
         """Inicjalizacja klasy wykonującej obliczenia"""
 
-        self.alfa = math.radians(deltaAlfa)
+        self.alfa = 360 / deltaAlfa
         """krok dla układu emiter/detektor - od użytkownika"""
 
         self.n = detectors
@@ -41,13 +45,13 @@ class Algorithm:
         self.D = []
         """Kontener zawierający współrzędne detektorów"""
 
-        self.iterations = np.arange(0, 181, deltaAlfa)
+        self.iterations = np.arange(0, 360, self.alfa)
         """Liczba kroków podczas tworzenia sinogramu"""
 
         self.createDetectorsCoordinates()
         print(self.D)
-        sinogram = self.createSinogram()
-        #print(self.sinogram)
+        self.sinogram = self.createSinogram()
+        print(self.sinogram)
 
     def createDetectorsCoordinates(self):
         """Metoda inicjalizująca współrzędne detektorów"""
@@ -60,14 +64,13 @@ class Algorithm:
             self.D[counter][0] = self.r * math.cos(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
             self.D[counter][1] = self.r * math.sin(angle + math.pi - self.l / 2 + counter * self.l / (self.n - 1))
 
-    def get_points(startPoint, endPoint):
-        """Algorytm Bresenhama"""
-        x1, y1 = startPoint
-        x2, y2 = endPoint
+    def get_points(self, start, end):
+        x1, y1 = start
+        x2, y2 = end
         dx = x2 - x1
         dy = y2 - y1
 
-        is_steep = abs(dx) - abs(dy)
+        is_steep = abs(dx) - abs(dy) < 0
         if is_steep:
             x1, y1 = y1, x1
             x2, y2 = y2, x2
@@ -78,36 +81,53 @@ class Algorithm:
             y1, y2 = y2, y1
             swapped = True
 
+        m = 1024
+
         dx = x2 - x1
         dy = y2 - y1
 
-        error = int(dx / 2.0)
+        mdx = math.floor(m * (x2 - x1))
+        mdy = math.floor(m * (y2 - y1))
+
+        i1 = math.floor(x1)
+        i2 = math.floor(x2)
+        y = math.floor(y1)
+
+        error = math.floor(-m * (dx * (1 - y1) - dy * (1 - x1)))
+        error = -error if error > 0 else error
+
         ystep = 1 if y1 < y2 else -1
 
-        y = y1
         points = []
-        for x in range(x1, x2 + 1):
+        for x in range(i1, i2 + 1):
             coord = (y, x) if is_steep else (x, y)
             points.append(coord)
-            error -= abs(dy)
-            if error < 0:
+            error += abs(mdy)
+            if error > 0:
                 y += ystep
-                error += dx
+                error -= mdx
 
         if swapped:
             points.reverse()
         return points
+
     def createSinogram(self):
         """Metoda tworząca sinogram"""
         sin = [ [0]*len(self.D) for i in range(len(self.iterations))]
         for angleIndex, angle in enumerate(self.iterations):
             self.updateDetectorsCoordinates(math.radians(angle))
-            print(self.D)
+            print(angle)
             for detectorIndex, detector in enumerate(self.D):
+                #print(self.E)
+                #print(detector)
                 pts = self.get_points(self.E, detector)
                 colorValue = 0.0
                 for point in pts:
                     colorValue += qGray(self.image.pixel(point[0], point[1]))
                 sin[angleIndex][detectorIndex] = colorValue
-        print(sin)
+        #print(sin)
         return sin
+
+    def heatmap2d(self, array):
+        plt.imshow(array, cmap='viridis')
+        plt.show()
