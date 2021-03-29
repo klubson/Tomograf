@@ -1,3 +1,5 @@
+import math
+
 def get_points(start, end):
     x1, y1 = start
     x2, y2 = end
@@ -15,21 +17,26 @@ def get_points(start, end):
         y1, y2 = y2, y1
         swapped = True
 
-    dx = x2 - x1
-    dy = y2 - y1
+    m = 1024
 
-    error = int(dx/2.0)
+    dx = m*(x2 - x1)
+    dy = m*(y2 - y1)
+
+    i1 = math.floor(x1)
+    i2 = math.floor(x2)
+    y = math.floor(y1)
+
+    error = math.floor(dy*(1-(x1-i1) - dx*(1 - y1-y)))
     ystep = 1 if y1 < y2 else -1
 
-    y = y1
     points = []
-    for x in range(x1, x2+1):
+    for x in range(i1, i2+1):
         coord = (y, x) if is_steep else (x, y)
         points.append(coord)
         error -= abs(dy)
         if error < 0:
             y += ystep
-            error += dx
+            error -= dx
 
     if swapped:
         points.reverse()
