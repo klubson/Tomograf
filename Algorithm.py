@@ -6,6 +6,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import *
 
+
 class Algorithm:
     alfa = 0
     n = 0 # number of detectors
@@ -224,12 +225,12 @@ class Algorithm:
                     except IndexError:
                         pass
                 try:
-                    sin[angleIndex][emitter] = math.log10(colorValue)
+                    sin[angleIndex][emitter] = colorValue
                 except ValueError:
                     sin[angleIndex][emitter] = 0.0
 
             #pts = self.bresenhamline(self.Emitter, self.Detectors, 2 * self.r).reshape(len(self.D), int(2 * self.r), 2)
-        print(sin)
+        #print(sin)
         return sin
 
     def makeSquare(self, radius):
