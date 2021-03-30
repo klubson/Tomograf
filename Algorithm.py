@@ -224,7 +224,7 @@ class Algorithm:
                     except IndexError:
                         pass
                 try:
-                    sin[angleIndex][emitter] = colorValue
+                    sin[angleIndex][emitter] = math.log10(colorValue)
                 except ValueError:
                     sin[angleIndex][emitter] = 0.0
 
@@ -240,7 +240,7 @@ class Algorithm:
         self.makeSquare(2*self.r)
         for angleIndex, angle in enumerate(self.iterations):
 
-            self.newFigureCoordinates(angle)
+            self.newFigureCoordinates(math.radians(angle))
             print("%.2f" % (angleIndex / len(self.iterations) * 100), "%")
             for emitter in range(len(self.Emitter)):
                 dist = math.sqrt(math.pow(self.Emitter[emitter][0] - self.Detectors[emitter][0], 2) + math.pow(self.Emitter[emitter][1] - self.Detectors[emitter][1], 2))
@@ -256,7 +256,7 @@ class Algorithm:
                     try:
                         pt_0 = int(point[0])
                         pt_1 = int(point[1])
-                        self.square[pt_0][pt_1] = (self.square[pt_0][pt_1] + colorValue) / 2
+                        self.square[pt_0][pt_1] = (self.square[pt_0][pt_1]*emitter + colorValue) / (emitter+1)
                         # print(colorValue)
                     except IndexError:
                         pass
