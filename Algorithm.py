@@ -244,8 +244,11 @@ class Algorithm:
                     dist = 0.0
                 dist = int(dist)
                 pts = self.bresenhamline(np.array([self.Emitter[emitter]]), np.array([self.Detectors[emitter]]), dist)
-
-                colorValue = self.sinogram[angleIndex][emitter] / (2 * self.r)
+                
+                if dist == 0:
+                    dist = 1
+                
+                colorValue = self.sinogram[angleIndex][emitter] / dist
                 for point in pts:
                     try:
                         pt_0 = int(point[0])
