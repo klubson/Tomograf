@@ -117,7 +117,7 @@ class MainWindow(QMainWindow):
             print('good')
             algorithm = Algorithm(self.fileImage, self.angle_slider.getVal(), self.sensor_slider.getVal(), self.scan_count_slider.getVal())
             algorithm.heatmap2d(algorithm.sinogram)
-            #algorithm.heatmap2d(algorithm.square)
+            algorithm.heatmap2d(algorithm.square)
         else:
             error_dialog = QtWidgets.QMessageBox()
             error_dialog.setIcon(QMessageBox.Critical)

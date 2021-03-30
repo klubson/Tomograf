@@ -55,10 +55,12 @@ class Algorithm:
 
         self.createDetectorsCoordinates()
         #print(self.D)
+        #print(self.image)
         self.makePictureGray()
+        #print(self.greyPicture)
         self.sinogram = self.createSinogram()
         #print(self.sinogram)
-        #self.createOutput()
+        self.createOutput()
 
     def heatmap2d(self, array):
         plt.imshow(array, cmap='Greys')
@@ -202,20 +204,22 @@ class Algorithm:
         for angleIndex, angle in enumerate(self.iterations):
             self.updateDetectorsCoordinates(math.radians(angle))
             #print(angle)
+            #print(self.r)
+            #print(self.r * 2)
             print("%.2f" % (angleIndex / len(self.iterations) * 100), "%")
             for emitter in range(len(self.Emitter)):
-                dist = ((self.Emitter[emitter][0]-self.Detectors[emitter][0])**2 - (self.Emitter[emitter][1]-self.Detectors[emitter][1])**2)**(1/2)
+                dist = math.sqrt(math.pow(self.Emitter[emitter][0]-self.Detectors[emitter][0], 2) + math.pow(self.Emitter[emitter][1]-self.Detectors[emitter][1], 2))
                 #print(dist)
                 if np.isnan(dist):
-                    dist = 0
+                    dist = 0.0
                 dist = int(dist)
                 pts = self.bresenhamline(np.array([self.Emitter[emitter]]), np.array([self.Detectors[emitter]]), dist)
-                print(pts)
+                #print(pts)
                 colorValue = 0.0
                 for point in pts:
                     try:
-                        pt_0 = point[0]
-                        pt_1 = point[1]
+                        pt_0 = int(point[0])
+                        pt_1 = int(point[1])
                         colorValue += self.greyPicture[pt_0][pt_1]
                     except IndexError:
                         pass
@@ -225,7 +229,7 @@ class Algorithm:
                     sin[angleIndex][emitter] = 0.0
 
             #pts = self.bresenhamline(self.Emitter, self.Detectors, 2 * self.r).reshape(len(self.D), int(2 * self.r), 2)
-
+        print(sin)
         return sin
 
     def makeSquare(self, radius):
@@ -238,16 +242,20 @@ class Algorithm:
 
             self.newFigureCoordinates(angle)
             print("%.2f" % (angleIndex / len(self.iterations) * 100), "%")
-            pts = self.bresenhamline(self.Emitter, self.Detectors, 2 * self.r).reshape(len(self.D), int(2 * self.r), 2)
-            pts = pts.astype(int)
+            for emitter in range(len(self.Emitter)):
+                dist = math.sqrt(math.pow(self.Emitter[emitter][0] - self.Detectors[emitter][0], 2) + math.pow(self.Emitter[emitter][1] - self.Detectors[emitter][1], 2))
+                # print(dist)
+                if np.isnan(dist):
+                    dist = 0.0
+                dist = int(dist)
+                pts = self.bresenhamline(np.array([self.Emitter[emitter]]), np.array([self.Detectors[emitter]]), dist)
 
-            for detectorIndex in range(len(pts)):
-                colorValue = self.sinogram[angleIndex][detectorIndex] / (2 * self.r)
+                colorValue = self.sinogram[angleIndex][emitter] / (2 * self.r)
                 properColorValue = 0.0
-                for point in pts[detectorIndex]:
+                for point in pts:
                     try:
-                        pt_0 = point[0]
-                        pt_1 = point[1]
+                        pt_0 = int(point[0])
+                        pt_1 = int(point[1])
                         self.square[pt_0][pt_1] = (self.square[pt_0][pt_1] + colorValue) / 2
                         # print(colorValue)
                     except IndexError:
