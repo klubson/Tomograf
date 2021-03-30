@@ -199,7 +199,7 @@ class Algorithm:
             self.updateDetectorsCoordinates(math.radians(angle))
             print("Tworzenie sinogramu. Postęp: ", "%.2f" % (angleIndex / len(self.iterations) * 100), "%")
             for emitter in range(len(self.Emitter)):
-                dist = math.sqrt(math.pow(self.Emitter[emitter][0]-self.Detectors[emitter][0], 2) + math.pow(self.Emitter[emitter][1]-self.Detectors[emitter][1], 2))
+                dist = np.amax(np.amax(np.abs(self.Emitter[emitter] - self.Detectors[emitter])))
                 if np.isnan(dist):
                     dist = 0.0
                 dist = int(dist)
@@ -238,8 +238,7 @@ class Algorithm:
             self.newFigureCoordinates(math.radians(angle))
             print("Tworzenie obraz wyjściowego. Postęp: ", "%.2f" % (angleIndex / len(self.iterations) * 100), "%")
             for emitter in range(len(self.Emitter)):
-                dist = math.sqrt(math.pow(self.Emitter[emitter][0] - self.Detectors[emitter][0], 2) + math.pow(self.Emitter[emitter][1] - self.Detectors[emitter][1], 2))
-                # print(dist)
+                dist = np.amax(np.amax(np.abs(self.Emitter[emitter] - self.Detectors[emitter])))
                 if np.isnan(dist):
                     dist = 0.0
                 dist = int(dist)
@@ -248,7 +247,7 @@ class Algorithm:
                 if dist == 0:
                     dist = 1
                 
-                colorValue = self.sinogram[angleIndex][emitter] / dist
+                colorValue = self.sinogram[angleIndex][emitter]
                 for point in pts:
                     try:
                         pt_0 = int(point[0])
