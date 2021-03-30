@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import time
 import math
 from PyQt5.QtGui import QPixmap
@@ -9,66 +10,54 @@ from PyQt5.QtGui import *
 
 class Algorithm:
     alfa = 0
-    n = 0 # number of detectors
-    l = 0 # range of detectors
-    r = 0 # radius
-    S = [0, 0] # picture's center's coordinates
-    E = [] #emitters' coordinates
+    """Krok dla układów emiter/detektor"""
+    n = 0
+    """Liczba detektorów"""
+    l = 0
+    """Rozwartość kątowa detektorów"""
+    r = 0
+    """Promień okręgu wpisanego w obrazek"""
+    S = [0, 0]
+    """Współrzędne środka obrazka"""
+    E = []
+    """Inicjalizacja tablicy współrzędnych emiterów"""
     Emitter = np.array
-    D = []  #list of detectors
+    """Inicjalizacja tablicy współrzędnych emiterów"""
+    D = []
+    """Inicjalizacja tablicy współrzędnych detektorów"""
     Detectors = np.array
+    """Inicjalizacja tablicy współrzędnych emiterów"""
     image = QImage
+    """Zmienna przechowująca wczytany z pliku obrazek"""
     iterations = np.arange
+    """Inicjalizacja tablicy przechowującej wartości kątów, po których iterują funkcje"""
     sinogram = []
+    """Inicjalizacja tablicy przechowującej sinogram"""
     greyPicture = []
+    """Inicjalizacja tablicy obrazka w skali szarości"""
     square = None
+    """Inicjalizacja tablicy przechowującej obraz końcowy"""
 
     def __init__(self, picture, deltaAlfa, detectors, range):
         """Inicjalizacja klasy wykonującej obliczenia"""
 
         self.alfa = 180 / deltaAlfa
-        """krok dla układu emiter/detektor - od użytkownika"""
-
         self.n = detectors
-        """liczba detektorów - od użytkownika"""
-
         self.l = math.radians(range)
-        """Rozwartość/rozpiętość układu emiter/detektor - od użytkownika"""
-
         self.image = picture.toImage()
-        """Obraz pobrany z komputera"""
-
         self.r = self.image.width() / 2
-        """Promień okręgu wpisanego w obrazek - z wczytanego zdjęcia"""
-
         self.S = [self.image.width() / 2, self.image.height() / 2]
-        """Środek obrazka - z wczytanego zdjęcia"""
-        print(self.S)
-
         self.E = []
-        """Emiter i jego właściwości"""
-
         self.D = []
-        """Kontener zawierający współrzędne detektorów"""
-
         self.iterations = np.arange(0, 180, self.alfa)
-        """Liczba kroków podczas tworzenia sinogramu"""
 
         self.createDetectorsCoordinates()
-        #print(self.D)
-        #print(self.image)
         self.makePictureGray()
-        #print(self.greyPicture)
         self.sinogram = self.createSinogram()
-        #print(self.sinogram)
         self.createOutput()
 
-    def heatmap2d(self, array):
-        plt.imshow(array, cmap='Greys')
-        plt.show()
-
     def createDetectorsCoordinates(self):
-        """Metoda inicjalizująca współrzędne detektorów"""
+        """Metoda inicjalizująca współrzędne detektorów i emiterów"""
         for d in range(self.n):
             self.D.append([0, 0])
             self.E.append([0, 0])
@@ -83,16 +72,15 @@ class Algorithm:
         self.Detectors = np.array(self.D)
         self.E.reverse()
         self.Emitter = np.array(self.E)
-        #print(self.Emitter)
 
     def makePictureGray(self):
-        #print(type(self.image.width()))
+        """Metoda tworząca odpowiednik obrazka w skali szarości"""
         self.greyPicture = np.zeros((self.image.width(), self.image.height()), dtype=int)
         for x in range(self.image.width()):
             for y in range(self.image.height()):
                 self.greyPicture[x][y] = qGray(self.image.pixel(x, y))
     """
-    N-D Bresenham line algo
+    N-D Bresenham line algorithm
     """
     import numpy as np
     def bresenhamline_nslope(self, slope):
@@ -201,21 +189,22 @@ class Algorithm:
 
     def createSinogram(self):
         """Metoda tworząca sinogram"""
-        sin = [ [0]*len(self.D) for i in range(len(self.iterations))]
+
+        plt.ion()
+        sin = np.zeros((len(self.iterations), len(self.D)))
+        plt.figure("Sinogram")
+        mngr = plt.get_current_fig_manager()
+        mngr.window.setGeometry(100, 200, 640, 545)
+        self.updatePlot(sin)
         for angleIndex, angle in enumerate(self.iterations):
             self.updateDetectorsCoordinates(math.radians(angle))
-            #print(angle)
-            #print(self.r)
-            #print(self.r * 2)
-            print("%.2f" % (angleIndex / len(self.iterations) * 100), "%")
+            print("Tworzenie sinogramu. Postęp: ", "%.2f" % (angleIndex / len(self.iterations) * 100), "%")
             for emitter in range(len(self.Emitter)):
                 dist = math.sqrt(math.pow(self.Emitter[emitter][0]-self.Detectors[emitter][0], 2) + math.pow(self.Emitter[emitter][1]-self.Detectors[emitter][1], 2))
-                #print(dist)
                 if np.isnan(dist):
                     dist = 0.0
                 dist = int(dist)
                 pts = self.bresenhamline(np.array([self.Emitter[emitter]]), np.array([self.Detectors[emitter]]), dist)
-                #print(pts)
                 colorValue = 0.0
                 for point in pts:
                     try:
@@ -228,21 +217,27 @@ class Algorithm:
                     sin[angleIndex][emitter] = colorValue
                 except ValueError:
                     sin[angleIndex][emitter] = 0.0
-
-            #pts = self.bresenhamline(self.Emitter, self.Detectors, 2 * self.r).reshape(len(self.D), int(2 * self.r), 2)
-        #print(sin)
+            if angleIndex % int((len(self.iterations) / 20)) == 0 or angleIndex == len(self.iterations) - 1:
+                self.updatePlot(sin)
+        print("Zakończono tworzenie sinogramu")
         return sin
 
     def makeSquare(self, radius):
+        """Metoda inicjalizująca obraz wyjściowy"""
         self.square = np.zeros((int(radius), int(radius)))
 
-
     def createOutput(self):
+        """Metoda tworząca obraz wyjściowy"""
         self.makeSquare(2*self.r)
-        for angleIndex, angle in enumerate(self.iterations):
+        plt.ion()
+        plt.figure("Obraz wyjściowy")
+        mngr = plt.get_current_fig_manager()
+        mngr.window.setGeometry(1200, 200, 640, 545)
+        self.updatePlot(self.square)
 
+        for angleIndex, angle in enumerate(self.iterations):
             self.newFigureCoordinates(math.radians(angle))
-            print("%.2f" % (angleIndex / len(self.iterations) * 100), "%")
+            print("Tworzenie obraz wyjściowego. Postęp: ", "%.2f" % (angleIndex / len(self.iterations) * 100), "%")
             for emitter in range(len(self.Emitter)):
                 dist = math.sqrt(math.pow(self.Emitter[emitter][0] - self.Detectors[emitter][0], 2) + math.pow(self.Emitter[emitter][1] - self.Detectors[emitter][1], 2))
                 # print(dist)
@@ -252,34 +247,16 @@ class Algorithm:
                 pts = self.bresenhamline(np.array([self.Emitter[emitter]]), np.array([self.Detectors[emitter]]), dist)
 
                 colorValue = self.sinogram[angleIndex][emitter] / (2 * self.r)
-                properColorValue = 0.0
                 for point in pts:
                     try:
                         pt_0 = int(point[0])
                         pt_1 = int(point[1])
-                        self.square[pt_0][pt_1] = (self.square[pt_0][pt_1]*emitter + colorValue) / (emitter+1)
-                        # print(colorValue)
+                        self.square[pt_1][pt_0] = (self.square[pt_1][pt_0]*emitter + colorValue) / (emitter+1)
                     except IndexError:
                         pass
-            """if properColorValue != self.sinogram[angleIndex][detectorIndex]:
-                    for point in pts[detectorIndex]:
-                        try:
-                            pt_0 = point[0]
-                            pt_1 = point[1]
-                            self.square[pt_0][pt_1] = colorValue
-                            # print(colorValue)
-                        except IndexError:
-                            pass"""
-            """else:
-                    for point in pts[detectorIndex]:
-                        try:
-                            pt_0 = point[0]
-                            pt_1 = point[1]
-                            self.square[pt_0][pt_1] += 1
-                            # print(colorValue)
-                        except IndexError:
-                            pass"""
-
+            if angleIndex % int((len(self.iterations) / 20)) == 0 or angleIndex == len(self.iterations) - 1:
+                self.updatePlot(self.square)
+        print("Zakończono tworzenie obrazu wyjściowego")
 
     def newFigureCoordinates(self, angle):
         for counter in range(len(self.D)):
@@ -291,3 +268,7 @@ class Algorithm:
         self.E.reverse()
         self.Emitter = np.array(self.E)
 
+    def updatePlot(self, img):
+        plt.imshow(img, cmap='gray')
+        plt.draw()
+        plt.pause(0.01)

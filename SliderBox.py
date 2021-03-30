@@ -5,7 +5,7 @@ import numpy as np
 
 class SliderBox(QHBoxLayout):
 
-    def __init__(self, name, mini, maxi, step):
+    def __init__(self, name, mini, maxi, step, toSet):
         super().__init__()
 
         self.text = QLabel()
@@ -14,7 +14,7 @@ class SliderBox(QHBoxLayout):
         self.slider = QSlider(Qt.Horizontal)
         self.slider.setMinimum(mini)
         self.slider.setMaximum(maxi)
-        self.slider.setValue(maxi/2)
+        self.slider.setValue(toSet)
         self.slider.setTickInterval(step)
         self.slider.setSingleStep(step)
         self.slider.setTickPosition(QSlider.TicksBelow)
@@ -32,11 +32,6 @@ class SliderBox(QHBoxLayout):
         self.addStretch(1)
 
     def __setVal(self):  # "__" przed funkcją w klasie robi ją prywatną w pythonie
-        #table = np.arange(mini, maxi, step)
-        #for i in table:
-        #    if abs(i - self.slider.value()) <= step/2:
-        #        self.value.setText(str(i))
-        #        break
         self.value.setText(str(self.slider.value()))
 
     def getVal(self):

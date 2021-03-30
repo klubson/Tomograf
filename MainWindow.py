@@ -33,9 +33,9 @@ class MainWindow(QMainWindow):
         self.continue_button = QPushButton("Continue", self)
         self.file_choose_layout = QHBoxLayout()
         self.main_layout = QVBoxLayout()
-        self.angle_slider = SliderBox("Scans:", 0, 720, 1)
-        self.sensor_slider = SliderBox("Sensors:", 90, 720, 30)
-        self.scan_count_slider = SliderBox("Range:", 1, 180, 1)
+        self.angle_slider = SliderBox("Scans:", 0, 720, 1, 180)
+        self.sensor_slider = SliderBox("Sensors:", 90, 720, 1, 180)
+        self.scan_count_slider = SliderBox("Range:", 1, 180, 1, 180)
 
         self.initUi()
 
@@ -116,8 +116,6 @@ class MainWindow(QMainWindow):
         if self.fileName:
             print('good')
             algorithm = Algorithm(self.fileImage, self.angle_slider.getVal(), self.sensor_slider.getVal(), self.scan_count_slider.getVal())
-            algorithm.heatmap2d(algorithm.sinogram)
-            algorithm.heatmap2d(algorithm.square)
         else:
             error_dialog = QtWidgets.QMessageBox()
             error_dialog.setIcon(QMessageBox.Critical)
